@@ -237,10 +237,10 @@ problemToString p =
             "expecting binary"
 
         ExpectingFloat ->
-            "expecting number"
+            "expecting float"
 
         ExpectingNumber ->
-            "expecting variable"
+            "expecting number"
 
         ExpectingVariable ->
             "expecting variable"
