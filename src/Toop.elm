@@ -1,16 +1,17 @@
-module Toop
-    exposing
-        ( T1
-        , T10
-        , T2
-        , T3
-        , T4
-        , T5
-        , T6
-        , T7
-        , T8
-        , T9
-        )
+module Toop exposing
+    ( T1(..)
+    , T10(..)
+    , T11(..)
+    , T12(..)
+    , T2(..)
+    , T3(..)
+    , T4(..)
+    , T5(..)
+    , T6(..)
+    , T7(..)
+    , T8(..)
+    , T9(..)
+    )
 
 
 type T1 a
@@ -51,3 +52,11 @@ type T9 a b c d e f g h i
 
 type T10 a b c d e f g h i j
     = T10 a b c d e f g h i j
+
+
+type T11 a b c d e f g h i j k
+    = T11 a b c d e f g h i j k
+
+
+type T12 a b c d e f g h i j k l
+    = T12 a b c d e f g h i j k l
