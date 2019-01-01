@@ -56,10 +56,10 @@ httpErrorString e =
             "networkerror"
 
         Http.BadStatus x ->
-            "badstatus: " ++ String.fromInt x.status.code ++ ", " ++ x.status.message
+            "badstatus: " ++ String.fromInt x
 
-        Http.BadPayload s r ->
-            "badpayload\nstring: " ++ s ++ "\nresponse body: " ++ r.body
+        Http.BadBody b ->
+            "bad body: " ++ b
 
 
 rest : List a -> List a
