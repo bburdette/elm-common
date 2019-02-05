@@ -1,4 +1,4 @@
-module Toop exposing (T1(..), T10(..), T11(..), T12(..), T2(..), T3(..), T4(..), T5(..), T6(..), T7(..), T8(..), T9(..), andX, applyT1, applyT2, lh, rest, takeT1, takeT10, takeT11, takeT12, takeT2, takeT3, takeT4, takeT5, takeT6, takeT7, takeT8, takeT9, tuply)
+module Toop exposing (T1(..), T10(..), T11(..), T12(..), T2(..), T3(..), T4(..), T5(..), T6(..), T7(..), T8(..), T9(..), Veck3(..), andX, applyT1, applyT10, applyT11, applyT12, applyT2, applyT3, applyT4, applyT5, applyT6, applyT7, applyT8, applyT9, getVecks, lh, rest, takeT1, takeT10, takeT11, takeT12, takeT2, takeT3, takeT4, takeT5, takeT6, takeT7, takeT8, takeT9, tuply)
 
 
 type T1 a
@@ -24,8 +24,8 @@ type T3 a b c
 
 
 applyT3 : (a -> b -> c -> x) -> T3 a b c -> x
-applyT3 y (T3 a b c) =
-    y a b c
+applyT3 y (T3 aa ab ac) =
+    y aa ab ac
 
 
 type T4 a b c d
@@ -134,154 +134,141 @@ tuply f ( a, b ) =
     f a b
 
 
-takeT1 : List a -> Maybe (T1 a)
+takeT1 : List a -> Maybe ( T1 a, List a )
 takeT1 la =
-    Maybe.map Tuple.first <|
-        andX T1 la
+    andX T1 la
 
 
-takeT2 : List a -> Maybe (T2 a a)
+takeT2 : List a -> Maybe ( T2 a a, List a )
 takeT2 l =
-    Maybe.map Tuple.first
-        (andX T2 l
-            |> Maybe.andThen (tuply andX)
-        )
+    andX T2 l
+        |> Maybe.andThen (tuply andX)
 
 
-takeT3 : List a -> Maybe (T3 a a a)
+takeT3 : List a -> Maybe ( T3 a a a, List a )
 takeT3 l =
-    Maybe.map Tuple.first
-        (andX T3 l
-            |> Maybe.andThen (tuply andX)
-            |> Maybe.andThen (tuply andX)
-        )
+    andX T3 l
+        |> Maybe.andThen (tuply andX)
+        |> Maybe.andThen (tuply andX)
 
 
-takeT4 : List a -> Maybe (T4 a a a a)
+takeT4 : List a -> Maybe ( T4 a a a a, List a )
 takeT4 l =
-    Maybe.map Tuple.first
-        (andX T4 l
-            |> Maybe.andThen (tuply andX)
-            |> Maybe.andThen (tuply andX)
-            |> Maybe.andThen (tuply andX)
-        )
+    andX T4 l
+        |> Maybe.andThen (tuply andX)
+        |> Maybe.andThen (tuply andX)
+        |> Maybe.andThen (tuply andX)
 
 
-takeT5 : List a -> Maybe (T5 a a a a a)
+takeT5 : List a -> Maybe ( T5 a a a a a, List a )
 takeT5 l =
-    Maybe.map Tuple.first
-        (andX T5 l
-            |> Maybe.andThen (tuply andX)
-            |> Maybe.andThen (tuply andX)
-            |> Maybe.andThen (tuply andX)
-            |> Maybe.andThen (tuply andX)
-        )
+    andX T5 l
+        |> Maybe.andThen (tuply andX)
+        |> Maybe.andThen (tuply andX)
+        |> Maybe.andThen (tuply andX)
+        |> Maybe.andThen (tuply andX)
 
 
-takeT6 : List a -> Maybe (T6 a a a a a a)
+takeT6 : List a -> Maybe ( T6 a a a a a a, List a )
 takeT6 l =
-    Maybe.map Tuple.first
-        (andX T6 l
-            |> Maybe.andThen (tuply andX)
-            |> Maybe.andThen (tuply andX)
-            |> Maybe.andThen (tuply andX)
-            |> Maybe.andThen (tuply andX)
-            |> Maybe.andThen (tuply andX)
-        )
+    andX T6 l
+        |> Maybe.andThen (tuply andX)
+        |> Maybe.andThen (tuply andX)
+        |> Maybe.andThen (tuply andX)
+        |> Maybe.andThen (tuply andX)
+        |> Maybe.andThen (tuply andX)
 
 
-takeT7 : List a -> Maybe (T7 a a a a a a a)
+takeT7 : List a -> Maybe ( T7 a a a a a a a, List a )
 takeT7 l =
-    Maybe.map Tuple.first
-        (andX T7 l
-            |> Maybe.andThen (tuply andX)
-            |> Maybe.andThen (tuply andX)
-            |> Maybe.andThen (tuply andX)
-            |> Maybe.andThen (tuply andX)
-            |> Maybe.andThen (tuply andX)
-            |> Maybe.andThen (tuply andX)
-        )
+    andX T7 l
+        |> Maybe.andThen (tuply andX)
+        |> Maybe.andThen (tuply andX)
+        |> Maybe.andThen (tuply andX)
+        |> Maybe.andThen (tuply andX)
+        |> Maybe.andThen (tuply andX)
+        |> Maybe.andThen (tuply andX)
 
 
-takeT8 : List a -> Maybe (T8 a a a a a a a a)
+takeT8 : List a -> Maybe ( T8 a a a a a a a a, List a )
 takeT8 l =
-    Maybe.map Tuple.first
-        (andX T8 l
-            |> Maybe.andThen (tuply andX)
-            |> Maybe.andThen (tuply andX)
-            |> Maybe.andThen (tuply andX)
-            |> Maybe.andThen (tuply andX)
-            |> Maybe.andThen (tuply andX)
-            |> Maybe.andThen (tuply andX)
-            |> Maybe.andThen (tuply andX)
-        )
+    andX T8 l
+        |> Maybe.andThen (tuply andX)
+        |> Maybe.andThen (tuply andX)
+        |> Maybe.andThen (tuply andX)
+        |> Maybe.andThen (tuply andX)
+        |> Maybe.andThen (tuply andX)
+        |> Maybe.andThen (tuply andX)
+        |> Maybe.andThen (tuply andX)
 
 
-takeT9 : List a -> Maybe (T9 a a a a a a a a a)
+takeT9 : List a -> Maybe ( T9 a a a a a a a a a, List a )
 takeT9 l =
-    Maybe.map Tuple.first
-        (andX T9 l
-            |> Maybe.andThen (tuply andX)
-            |> Maybe.andThen (tuply andX)
-            |> Maybe.andThen (tuply andX)
-            |> Maybe.andThen (tuply andX)
-            |> Maybe.andThen (tuply andX)
-            |> Maybe.andThen (tuply andX)
-            |> Maybe.andThen (tuply andX)
-            |> Maybe.andThen (tuply andX)
-        )
+    andX T9 l
+        |> Maybe.andThen (tuply andX)
+        |> Maybe.andThen (tuply andX)
+        |> Maybe.andThen (tuply andX)
+        |> Maybe.andThen (tuply andX)
+        |> Maybe.andThen (tuply andX)
+        |> Maybe.andThen (tuply andX)
+        |> Maybe.andThen (tuply andX)
+        |> Maybe.andThen (tuply andX)
 
 
-takeT10 : List a -> Maybe (T10 a a a a a a a a a a)
+takeT10 : List a -> Maybe ( T10 a a a a a a a a a a, List a )
 takeT10 l =
-    Maybe.map Tuple.first
-        (andX T10 l
-            |> Maybe.andThen (tuply andX)
-            |> Maybe.andThen (tuply andX)
-            |> Maybe.andThen (tuply andX)
-            |> Maybe.andThen (tuply andX)
-            |> Maybe.andThen (tuply andX)
-            |> Maybe.andThen (tuply andX)
-            |> Maybe.andThen (tuply andX)
-            |> Maybe.andThen (tuply andX)
-            |> Maybe.andThen (tuply andX)
-        )
+    andX T10 l
+        |> Maybe.andThen (tuply andX)
+        |> Maybe.andThen (tuply andX)
+        |> Maybe.andThen (tuply andX)
+        |> Maybe.andThen (tuply andX)
+        |> Maybe.andThen (tuply andX)
+        |> Maybe.andThen (tuply andX)
+        |> Maybe.andThen (tuply andX)
+        |> Maybe.andThen (tuply andX)
+        |> Maybe.andThen (tuply andX)
 
 
-takeT11 : List a -> Maybe (T11 a a a a a a a a a a a)
+takeT11 : List a -> Maybe ( T11 a a a a a a a a a a a, List a )
 takeT11 l =
-    Maybe.map Tuple.first
-        (andX T11 l
-            |> Maybe.andThen (tuply andX)
-            |> Maybe.andThen (tuply andX)
-            |> Maybe.andThen (tuply andX)
-            |> Maybe.andThen (tuply andX)
-            |> Maybe.andThen (tuply andX)
-            |> Maybe.andThen (tuply andX)
-            |> Maybe.andThen (tuply andX)
-            |> Maybe.andThen (tuply andX)
-            |> Maybe.andThen (tuply andX)
-            |> Maybe.andThen (tuply andX)
-        )
+    andX T11 l
+        |> Maybe.andThen (tuply andX)
+        |> Maybe.andThen (tuply andX)
+        |> Maybe.andThen (tuply andX)
+        |> Maybe.andThen (tuply andX)
+        |> Maybe.andThen (tuply andX)
+        |> Maybe.andThen (tuply andX)
+        |> Maybe.andThen (tuply andX)
+        |> Maybe.andThen (tuply andX)
+        |> Maybe.andThen (tuply andX)
+        |> Maybe.andThen (tuply andX)
 
 
-takeT12 : List a -> Maybe (T12 a a a a a a a a a a a a)
+takeT12 : List a -> Maybe ( T12 a a a a a a a a a a a a, List a )
 takeT12 l =
-    Maybe.map Tuple.first
-        (andX T12 l
-            |> Maybe.andThen (tuply andX)
-            |> Maybe.andThen (tuply andX)
-            |> Maybe.andThen (tuply andX)
-            |> Maybe.andThen (tuply andX)
-            |> Maybe.andThen (tuply andX)
-            |> Maybe.andThen (tuply andX)
-            |> Maybe.andThen (tuply andX)
-            |> Maybe.andThen (tuply andX)
-            |> Maybe.andThen (tuply andX)
-            |> Maybe.andThen (tuply andX)
-            |> Maybe.andThen (tuply andX)
-        )
+    andX T12 l
+        |> Maybe.andThen (tuply andX)
+        |> Maybe.andThen (tuply andX)
+        |> Maybe.andThen (tuply andX)
+        |> Maybe.andThen (tuply andX)
+        |> Maybe.andThen (tuply andX)
+        |> Maybe.andThen (tuply andX)
+        |> Maybe.andThen (tuply andX)
+        |> Maybe.andThen (tuply andX)
+        |> Maybe.andThen (tuply andX)
+        |> Maybe.andThen (tuply andX)
+        |> Maybe.andThen (tuply andX)
 
 
+type Veck3
+    = Veck3 Float Float Float
 
--- takeT2 : List a -> Maybe (T2 a)
+
+getVecks : List Float -> List Veck3
+getVecks ays =
+    case takeT3 ays of
+        Nothing ->
+            []
+
+        Just ( t3, rays ) ->
+            applyT3 Veck3 t3 :: getVecks rays
