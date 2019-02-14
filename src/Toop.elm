@@ -1,4 +1,4 @@
-module Toop exposing (T1(..), T10(..), T11(..), T12(..), T2(..), T3(..), T4(..), T5(..), T6(..), T7(..), T8(..), T9(..), Veck3(..), andX, applyT1, applyT10, applyT11, applyT12, applyT2, applyT3, applyT4, applyT5, applyT6, applyT7, applyT8, applyT9, getVecks, lh, rest, takeT1, takeT10, takeT11, takeT12, takeT2, takeT3, takeT4, takeT5, takeT6, takeT7, takeT8, takeT9, tuply)
+module Toop exposing (T1(..), T10(..), T11(..), T12(..), T13(..), T14(..), T2(..), T3(..), T4(..), T5(..), T6(..), T7(..), T8(..), T9(..), Veck3(..), andX, applyT1, applyT10, applyT11, applyT12, applyT13, applyT14, applyT2, applyT3, applyT4, applyT5, applyT6, applyT7, applyT8, applyT9, getVecks, lh, rest, takeT1, takeT10, takeT11, takeT12, takeT13, takeT14, takeT2, takeT3, takeT4, takeT5, takeT6, takeT7, takeT8, takeT9, tuply)
 
 
 type T1 a
@@ -107,6 +107,24 @@ type T12 a b c d e f g h i j k l
 applyT12 : (a -> b -> c -> d -> e -> f -> g -> h -> i -> j -> k -> l -> x) -> T12 a b c d e f g h i j k l -> x
 applyT12 y (T12 a b c d e f g h i j k l) =
     y a b c d e f g h i j k l
+
+
+type T13 a b c d e f g h i j k l m
+    = T13 a b c d e f g h i j k l m
+
+
+applyT13 : (a -> b -> c -> d -> e -> f -> g -> h -> i -> j -> k -> l -> m -> x) -> T13 a b c d e f g h i j k l m -> x
+applyT13 y (T13 a b c d e f g h i j k l m) =
+    y a b c d e f g h i j k l m
+
+
+type T14 a b c d e f g h i j k l m n
+    = T14 a b c d e f g h i j k l m n
+
+
+applyT14 : (a -> b -> c -> d -> e -> f -> g -> h -> i -> j -> k -> l -> m -> n -> x) -> T14 a b c d e f g h i j k l m n -> x
+applyT14 y (T14 a b c d e f g h i j k l m n) =
+    y a b c d e f g h i j k l m n
 
 
 rest l =
@@ -247,6 +265,41 @@ takeT11 l =
 takeT12 : List a -> Maybe ( T12 a a a a a a a a a a a a, List a )
 takeT12 l =
     andX T12 l
+        |> Maybe.andThen (tuply andX)
+        |> Maybe.andThen (tuply andX)
+        |> Maybe.andThen (tuply andX)
+        |> Maybe.andThen (tuply andX)
+        |> Maybe.andThen (tuply andX)
+        |> Maybe.andThen (tuply andX)
+        |> Maybe.andThen (tuply andX)
+        |> Maybe.andThen (tuply andX)
+        |> Maybe.andThen (tuply andX)
+        |> Maybe.andThen (tuply andX)
+        |> Maybe.andThen (tuply andX)
+
+
+takeT13 : List a -> Maybe ( T13 a a a a a a a a a a a a a, List a )
+takeT13 l =
+    andX T13 l
+        |> Maybe.andThen (tuply andX)
+        |> Maybe.andThen (tuply andX)
+        |> Maybe.andThen (tuply andX)
+        |> Maybe.andThen (tuply andX)
+        |> Maybe.andThen (tuply andX)
+        |> Maybe.andThen (tuply andX)
+        |> Maybe.andThen (tuply andX)
+        |> Maybe.andThen (tuply andX)
+        |> Maybe.andThen (tuply andX)
+        |> Maybe.andThen (tuply andX)
+        |> Maybe.andThen (tuply andX)
+        |> Maybe.andThen (tuply andX)
+
+
+takeT14 : List a -> Maybe ( T14 a a a a a a a a a a a a a a, List a )
+takeT14 l =
+    andX T14 l
+        |> Maybe.andThen (tuply andX)
+        |> Maybe.andThen (tuply andX)
         |> Maybe.andThen (tuply andX)
         |> Maybe.andThen (tuply andX)
         |> Maybe.andThen (tuply andX)
