@@ -1,5 +1,6 @@
-module Util exposing (Size, captchaQ, deadEndToString, deadEndsToString, drl, first, httpErrorString, maxInt, mbl, mblist, minInt, monthInt, problemToString, rest, rslist, trueforany)
+module Util exposing (Size, captchaQ, deadEndToString, deadEndsToString, first, httpErrorString, maxInt, mblist, minInt, monthInt, paramParser, paramsParser, problemToString, rest, rslist, trueforany)
 
+import Dict exposing (Dict)
 import Element exposing (..)
 import Element.Background as Background
 import Element.Border as Border
@@ -7,7 +8,8 @@ import Element.Events exposing (onClick)
 import Element.Font as Font
 import Element.Input as Input
 import Http
-import Parser exposing (Problem(..))
+import ParseHelp exposing (listOf)
+import Parser as P exposing ((|.), (|=), Problem(..), symbol)
 import Random exposing (Seed, int, step)
 import TangoColors as Color
 import Time
@@ -29,6 +31,27 @@ minInt =
     -9007199254740991
 
 
+paramParser : P.Parser ( String, String )
+paramParser =
+    P.succeed (\a b -> ( a, b ))
+        |= P.getChompedString
+            (P.chompWhile (\c -> c /= '='))
+        |. P.symbol "="
+        |= P.getChompedString
+            (P.chompWhile (\c -> c /= '&'))
+
+
+paramsParser : P.Parser (Dict String String)
+paramsParser =
+    P.succeed (\a b -> Dict.fromList <| a :: b)
+        |= paramParser
+        |= listOf
+            (P.succeed identity
+                |. symbol "&"
+                |= paramParser
+            )
+
+
 httpErrorString : Http.Error -> String
 httpErrorString e =
     case e of
@@ -44,8 +67,8 @@ httpErrorString e =
         Http.BadStatus x ->
             "badstatus: " ++ String.fromInt x
 
-        Http.BadBody b ->
-            "bad body: " ++ b
+        Http.BadBody s ->
+            "badbodyd\nstring: " ++ s
 
 
 rest : List a -> List a
@@ -73,16 +96,6 @@ first f l =
             Nothing
 
 
-mbl : Maybe a -> List a
-mbl mba =
-    case mba of
-        Just x ->
-            [ x ]
-
-        Nothing ->
-            []
-
-
 trueforany : (a -> Bool) -> List a -> Bool
 trueforany f l =
     case List.head l of
@@ -95,19 +108,6 @@ trueforany f l =
 
         Nothing ->
             False
-
-
-{-| de-result a list
--}
-drl : List (Result x a) -> Result x (List a)
-drl l =
-    List.foldr
-        (\rn rs ->
-            rs
-                |> Result.andThen (\ls -> Result.map (\n -> n :: ls) rn)
-        )
-        (Ok [])
-        l
 
 
 mblist : List (Maybe a) -> Maybe (List a)
@@ -131,26 +131,28 @@ mblist mbs =
             mbs
 
 
-rslist : List (Result a b) -> Result a (List b)
-rslist rslts =
-    Result.map List.reverse <|
-        List.foldl
-            (\mba rslst ->
-                case rslst of
-                    Err e ->
-                        Err e
+mbl : Maybe a -> List a
+mbl mba =
+    case mba of
+        Just x ->
+            [ x ]
 
-                    Ok lst ->
-                        case mba of
-                            Err e ->
-                                Err e
+        Nothing ->
+            []
 
-                            Ok a ->
-                                Ok <| a :: lst
-            )
-            (Ok [])
-            rslts
 
+
+{-| de-result a list
+-}
+rslist : List (Result x a) -> Result x (List a)
+rslist l =
+    List.foldr
+        (\rn rs ->
+            rs
+                |> Result.andThen (\ls -> Result.map (\n -> n :: ls) rn)
+        )
+        (Ok [])
+        l
 
 monthInt : Time.Month -> Int
 monthInt month =
@@ -207,17 +209,17 @@ captchaQ seed =
     )
 
 
-deadEndsToString : List Parser.DeadEnd -> String
+deadEndsToString : List P.DeadEnd -> String
 deadEndsToString deadEnds =
     String.concat (List.intersperse "; " (List.map deadEndToString deadEnds))
 
 
-deadEndToString : Parser.DeadEnd -> String
+deadEndToString : P.DeadEnd -> String
 deadEndToString deadend =
     problemToString deadend.problem ++ " at row " ++ String.fromInt deadend.row ++ ", col " ++ String.fromInt deadend.col
 
 
-problemToString : Parser.Problem -> String
+problemToString : P.Problem -> String
 problemToString p =
     case p of
         Expecting s ->
