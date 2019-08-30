@@ -169,13 +169,13 @@ foldUntil fn initb lst =
         [] ->
             initb
 
-        fst :: rest ->
+        fst :: rst ->
             case fn fst initb of
                 Stop retb ->
                     retb
 
                 Go updb ->
-                    foldUntil fn updb rest
+                    foldUntil fn updb rst
 
 
 monthInt : Time.Month -> Int
