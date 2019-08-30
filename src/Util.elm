@@ -1,4 +1,4 @@
-module Util exposing (Size, captchaQ, deadEndToString, deadEndsToString, first, httpErrorString, maxInt, mblist, minInt, monthInt, paramParser, paramsParser, problemToString, rest, rslist, trueforany)
+module Util exposing (Size, captchaQ, deadEndToString, deadEndsToString, first, foldUntil, httpErrorString, maxInt, mblist, minInt, monthInt, paramParser, paramsParser, problemToString, rest, rslist, trueforany)
 
 import Dict exposing (Dict)
 import Element exposing (..)
@@ -141,7 +141,6 @@ mbl mba =
             []
 
 
-
 {-| de-result a list
 -}
 rslist : List (Result x a) -> Result x (List a)
@@ -153,6 +152,31 @@ rslist l =
         )
         (Ok [])
         l
+
+
+{-| a function passed to foldUntil must return this.
+-}
+type Stopoid b
+    = Go b
+    | Stop b
+
+
+{-| keep folding until a condition is met, then stop.
+-}
+foldUntil : (a -> b -> Stopoid b) -> b -> List a -> b
+foldUntil fn initb lst =
+    case lst of
+        [] ->
+            initb
+
+        fst :: rest ->
+            case fn fst initb of
+                Stop retb ->
+                    retb
+
+                Go updb ->
+                    foldUntil fn updb rest
+
 
 monthInt : Time.Month -> Int
 monthInt month =
