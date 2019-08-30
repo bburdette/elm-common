@@ -1,18 +1,4 @@
-module Util exposing
-    ( Size
-    , captchaQ
-    , deadEndsToString
-    , first
-    , httpErrorString
-    , maxInt
-    , mbl
-    , mblist
-    , minInt
-    , monthInt
-    , rest
-    , rslist
-    , trueforany
-    )
+module Util exposing (Size, captchaQ, deadEndToString, deadEndsToString, drl, first, httpErrorString, maxInt, mbl, mblist, minInt, monthInt, problemToString, rest, rslist, trueforany)
 
 import Element exposing (..)
 import Element.Background as Background
@@ -109,6 +95,19 @@ trueforany f l =
 
         Nothing ->
             False
+
+
+{-| de-result a list
+-}
+drl : List (Result x a) -> Result x (List a)
+drl l =
+    List.foldr
+        (\rn rs ->
+            rs
+                |> Result.andThen (\ls -> Result.map (\n -> n :: ls) rn)
+        )
+        (Ok [])
+        l
 
 
 mblist : List (Maybe a) -> Maybe (List a)
