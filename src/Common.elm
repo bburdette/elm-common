@@ -1,4 +1,4 @@
-module Common exposing (accordion, buttonStyle, countString, dateElt, edges, lightOrange, lighterBlue, maxString, menuBlue, navChoice, navbar, navbarColor, npspaces, selectionColor, selectionColorDark, tagButtonStyle, tagLikeParagraph, tagParagraph, tagPill, workaroundMultiline)
+module Common exposing (accordion, buttonStyle, countString, dateElt, edges, lightOrange, lighterBlue, maxString, menuBlue, navChoice, navbar, navbarColor, npspaces, selectionColor, selectionColorDark, tagButtonStyle, tagLikeParagraph, tagPill, workaroundMultiline)
 
 import Array
 import Char
