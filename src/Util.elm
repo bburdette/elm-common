@@ -1,4 +1,4 @@
-module Util exposing (Size, captchaQ, deadEndToString, deadEndsToString, first, foldUntil, httpErrorString, maxInt, mblist, minInt, monthInt, paramParser, paramsParser, problemToString, rest, rslist, trueforany)
+module Util exposing (Size, captchaQ, deadEndToString, deadEndsToString, first, foldUntil, httpErrorString, maxInt, mbl, mblist, minInt, monthInt, paramParser, paramsParser, problemToString, rest, rslist, trueforany)
 
 import Dict exposing (Dict)
 import Element exposing (..)
