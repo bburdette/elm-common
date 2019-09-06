@@ -10,7 +10,6 @@ import Element.Font as Font
 import Element.Input as Input
 import Html.Attributes as HA
 import Json.Encode as JE
-import Tag exposing (Tag, TagId)
 import TangoColors as Color
 import Time exposing (Posix, Zone)
 import Util
@@ -213,29 +212,6 @@ tagPill attribs tagname =
         { label = text <| npspaces (maxString tagname)
         , onPress = Nothing
         }
-
-
-tagParagraph : List Tag -> (TagId -> msg) -> Element msg
-tagParagraph tags tagmsg =
-    paragraph
-        [ scrollbars
-        , height (maximum 150 shrink)
-        , width fill
-        , spacingXY 3 17
-        , paddingXY 0 10
-        ]
-        (List.intersperse (text " ")
-            (List.map
-                (\t ->
-                    tagPill
-                        [ Background.color <| Color.darkOrange
-                        , onClick (tagmsg t.id)
-                        ]
-                        t.name
-                )
-                tags
-            )
-        )
 
 
 tagLikeParagraph : List ( String, Color ) -> Element msg
