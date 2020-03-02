@@ -1,4 +1,26 @@
-module Common exposing (accordion, buttonStyle, countString, dateElt, edges, lightOrange, lighterBlue, maxString, menuBlue, navChoice, navbar, navbarColor, npspaces, selectionColor, selectionColorDark, tagButtonStyle, tagLikeParagraph, tagParagraph, tagPill, workaroundMultiline)
+module Common exposing
+    ( accordion
+    , buttonStyle
+    , countString
+    , dateElt
+    , edges
+    , lightOrange
+    , lighterBlue
+    , maxString
+    , menuBlue
+    , navChoice
+    , navbar
+    , navbarColor
+    , npspaces
+    , selectionColor
+    , selectionColorDark
+    , tagButtonStyle
+    , tagLikeParagraph
+    , tagParagraph
+    , tagPill
+    , tagPillMax
+    , workaroundMultiline
+    )
 
 import Array
 import Char
@@ -10,7 +32,6 @@ import Element.Font as Font
 import Element.Input as Input
 import Html.Attributes as HA
 import Json.Encode as JE
-import Tag exposing (Tag, TagId)
 import TangoColors as Color
 import Time exposing (Posix, Zone)
 import Util
@@ -47,10 +68,14 @@ npspaces str =
         str
 
 
-maxString : String -> String
-maxString s =
-    if String.length s > 30 then
-        String.left 27 s ++ "..."
+maxString : Int -> String -> String
+maxString maxlen s =
+    let
+        ml =
+            max maxlen 3
+    in
+    if String.length s > ml then
+        String.left (ml - 3) s ++ "..."
 
     else
         s
@@ -200,6 +225,11 @@ tagButtonStyle =
 
 tagPill : List (Attribute msg) -> String -> Element msg
 tagPill attribs tagname =
+    tagPillMax 20 attribs tagname
+
+
+tagPillMax : Int -> List (Attribute msg) -> String -> Element msg
+tagPillMax maxlen attribs tagname =
     Input.button
         (attribs
             ++ [ Font.color Color.white
@@ -210,7 +240,7 @@ tagPill attribs tagname =
                -- , width (maximum 80 shrink)
                ]
         )
-        { label = text <| npspaces (maxString tagname)
+        { label = text <| npspaces (maxString maxlen tagname)
         , onPress = Nothing
         }
 
