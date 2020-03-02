@@ -29,6 +29,7 @@ import Element.Events exposing (onClick)
 import Element.Font as Font
 import Element.Input as Input
 import Http
+import Json.Decode exposing (Decoder, map2)
 import ParseHelp exposing (listOf)
 import Parser as P exposing ((|.), (|=), Problem(..), symbol)
 import Random exposing (Seed, int, step)
