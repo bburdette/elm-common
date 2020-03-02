@@ -1,4 +1,25 @@
-module Util exposing (Size, captchaQ, deadEndToString, deadEndsToString, first, foldUntil, httpErrorString, maxInt, mblist, minInt, monthInt, paramParser, paramsParser, problemToString, rest, rslist, trueforany, andMap)
+module Util exposing
+    ( Size
+    , Stopoid(..)
+    , andMap
+    , captchaQ
+    , deadEndToString
+    , deadEndsToString
+    , first
+    , foldUntil
+    , httpErrorString
+    , maxInt
+    , mbl
+    , mblist
+    , minInt
+    , monthInt
+    , paramParser
+    , paramsParser
+    , problemToString
+    , rest
+    , rslist
+    , trueforany
+    )
 
 import Dict exposing (Dict)
 import Element exposing (..)
@@ -289,8 +310,6 @@ problemToString p =
             "bad repeat"
 
 
-
 andMap : Decoder a -> Decoder (a -> b) -> Decoder b
 andMap =
     map2 (|>)
-
