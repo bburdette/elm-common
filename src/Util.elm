@@ -1,4 +1,4 @@
-module Util exposing (Size, captchaQ, deadEndToString, deadEndsToString, first, foldUntil, httpErrorString, maxInt, mblist, minInt, monthInt, paramParser, paramsParser, problemToString, rest, rslist, trueforany)
+module Util exposing (Size, captchaQ, deadEndToString, deadEndsToString, first, foldUntil, httpErrorString, maxInt, mblist, minInt, monthInt, paramParser, paramsParser, problemToString, rest, rslist, trueforany, andMap)
 
 import Dict exposing (Dict)
 import Element exposing (..)
@@ -287,3 +287,10 @@ problemToString p =
 
         BadRepeat ->
             "bad repeat"
+
+
+
+andMap : Decoder a -> Decoder (a -> b) -> Decoder b
+andMap =
+    map2 (|>)
+
