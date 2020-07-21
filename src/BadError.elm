@@ -1,6 +1,5 @@
 module BadError exposing (..)
 
-import TangoColors as Color
 import Common exposing (buttonStyle)
 import Element exposing (..)
 import Element.Background as Background
@@ -9,6 +8,7 @@ import Element.Events exposing (onClick)
 import Element.Font as Font
 import Element.Input as Input
 import Html exposing (Html)
+import TangoColors as Color
 import Util exposing (httpErrorString)
 
 
@@ -42,8 +42,8 @@ view model =
         ]
 
 
-update : Model -> Msg -> ( Model, Cmd )
-update model msg =
+update : Msg -> Model -> ( Model, Cmd )
+update msg model =
     case msg of
         OkayThen ->
             ( model, Okay )
