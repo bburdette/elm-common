@@ -18,6 +18,7 @@ module Util exposing
     , problemToString
     , rest
     , rslist
+    , splitAt
     , trueforany
     )
 
@@ -198,6 +199,24 @@ foldUntil fn initb lst =
 
                 Go updb ->
                     foldUntil fn updb rst
+
+
+splitAt : (a -> Bool) -> List a -> ( List a, List a )
+splitAt test list =
+    case list of
+        a :: b ->
+            if test a then
+                ( [], a :: b )
+
+            else
+                let
+                    ( x, y ) =
+                        splitAt test b
+                in
+                ( a :: x, y )
+
+        [] ->
+            ( [], [] )
 
 
 monthInt : Time.Month -> Int
