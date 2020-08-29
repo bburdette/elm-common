@@ -140,7 +140,7 @@ navbar level currentmode mmsg choices =
     paragraph
         [ Background.color (navbarColor level)
         , spacing 5
-        , paddingEach { edges | top = 8, bottom = 0 }
+        , paddingEach { edges | top = 8, bottom = 8 }
         , width fill
         ]
         -- (text (String.fromInt level) ::
@@ -213,6 +213,7 @@ accordion bottomone show togglemsg caption content =
         ]
 
 
+tagButtonStyle : List (Attribute msg)
 tagButtonStyle =
     [ Background.color Color.blue
     , Font.color Color.white
