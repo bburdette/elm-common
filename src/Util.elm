@@ -8,6 +8,7 @@ module Util exposing
     , first
     , foldUntil
     , httpErrorString
+    , mapNothing
     , maxInt
     , mbl
     , mblist
@@ -117,6 +118,16 @@ first f l =
 
         Nothing ->
             Nothing
+
+
+mapNothing : a -> Maybe a -> Maybe a
+mapNothing aprime mba =
+    case mba of
+        Just a ->
+            Just a
+
+        Nothing ->
+            Just aprime
 
 
 trueforany : (a -> Bool) -> List a -> Bool

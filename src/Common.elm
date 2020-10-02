@@ -6,6 +6,7 @@ module Common exposing
     , edges
     , lightOrange
     , lighterBlue
+    , linkStyle
     , maxString
     , menuBlue
     , navChoice
@@ -273,6 +274,10 @@ buttonStyle =
     , paddingXY 10 5
     , Border.rounded 3
     ]
+
+
+linkStyle =
+    [ Font.color Color.darkBlue, Font.underline ]
 
 
 lightOrange =
