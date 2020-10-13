@@ -3,6 +3,7 @@ module Common exposing
     , buttonStyle
     , countString
     , dateElt
+    , disabledButtonStyle
     , edges
     , lightOrange
     , lighterBlue
@@ -274,6 +275,10 @@ buttonStyle =
     , paddingXY 10 5
     , Border.rounded 3
     ]
+
+
+disabledButtonStyle =
+    buttonStyle ++ [ Background.color Color.grey ]
 
 
 linkStyle =
