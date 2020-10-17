@@ -1,27 +1,4 @@
-module Util exposing
-    ( Size
-    , Stopoid(..)
-    , andMap
-    , captchaQ
-    , deadEndToString
-    , deadEndsToString
-    , first
-    , foldUntil
-    , httpErrorString
-    , mapNothing
-    , maxInt
-    , mbl
-    , mblist
-    , minInt
-    , monthInt
-    , paramParser
-    , paramsParser
-    , problemToString
-    , rest
-    , rslist
-    , splitAt
-    , trueforany
-    )
+module Util exposing (Size, Stopoid(..), andMap, captchaQ, deadEndToString, deadEndsToString, first, foldUntil, httpErrorString, mapNothing, maxInt, mbl, mblist, minInt, monthInt, paramParser, paramsParser, problemToString, rest, rslist, splitAt, trueforany, truncateDots)
 
 import Dict exposing (Dict)
 import Element exposing (..)
@@ -283,6 +260,19 @@ captchaQ seed =
     , "Whats " ++ String.fromInt a ++ " + " ++ String.fromInt b ++ "?"
     , a + b
     )
+
+
+truncateDots : String -> Int -> String
+truncateDots str len =
+    let
+        l =
+            String.length str
+    in
+    if l > len + 3 then
+        String.left len str ++ "..."
+
+    else
+        str
 
 
 deadEndsToString : List P.DeadEnd -> String
