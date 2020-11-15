@@ -33,7 +33,7 @@ type Cmd
 view : Model -> Element Msg
 view model =
     column [ width fill ]
-        [ el [] (text "uh oh, error!")
+        [ el [] (text "error!")
         , paragraph [] [ text model.errorMessage ]
         , Input.button (buttonStyle ++ [ width fill ])
             { onPress = Just OkayThen
