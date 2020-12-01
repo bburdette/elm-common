@@ -1,4 +1,4 @@
-module BadError exposing (..)
+module DisplayError exposing (..)
 
 import Common exposing (buttonStyle)
 import Element exposing (..)
@@ -32,10 +32,9 @@ type Cmd
 
 view : Model -> Element Msg
 view model =
-    column [ width fill ]
-        [ el [] (text "error!")
-        , paragraph [] [ text model.errorMessage ]
-        , Input.button (buttonStyle ++ [ width fill ])
+    column [ width fill, padding 10, spacing 8 ]
+        [ paragraph [] [ text model.errorMessage ]
+        , Input.button (buttonStyle ++ [])
             { onPress = Just OkayThen
             , label = text "okay"
             }
