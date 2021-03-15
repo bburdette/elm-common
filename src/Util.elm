@@ -1,4 +1,4 @@
-module Util exposing (Size, Stopoid(..), andMap, captchaQ, deadEndToString, deadEndsToString, first, foldUntil, httpErrorString, mapNothing, maxInt, mbl, mblist, minInt, monthInt, paramParser, paramsParser, problemToString, rest, rslist, splitAt, trueforany, truncateDots)
+module Util exposing (Size, Stopoid(..), andMap, captchaQ, deadEndToString, deadEndsToString, first, foldUntil, httpErrorString, mapNothing, maxInt, mbl, mblist, minInt, monthInt, paramParser, paramsParser, problemToString, rest, rslist, showTime, splitAt, trueforany, truncateDots)
 
 import Dict exposing (Dict)
 import Element exposing (..)
@@ -245,6 +245,21 @@ monthInt month =
 
         Time.Dec ->
             12
+
+
+showTime : Time.Zone -> Time.Posix -> String
+showTime zone time =
+    (String.fromInt <| Time.toYear zone time)
+        ++ "/"
+        ++ (String.fromInt <| monthInt <| Time.toMonth zone time)
+        ++ "/"
+        ++ (String.fromInt <| Time.toDay zone time)
+        ++ " "
+        ++ (String.fromInt <| Time.toHour zone time)
+        ++ ":"
+        ++ (String.fromInt <| Time.toMinute zone time)
+        ++ ":"
+        ++ (String.fromInt <| Time.toSecond zone time)
 
 
 captchaQ : Seed -> ( Seed, String, Int )
