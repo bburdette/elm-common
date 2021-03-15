@@ -331,6 +331,26 @@ problemToString p =
             "bad repeat"
 
 
+
+{-
+
+   andMap example.
+
+   parseMX : Decoder MusicXml
+   parseMX =
+       succeed MusicXml
+           |> andMap (maybe (stringAttr "version"))
+           |> andMap (maybe (path [ "work", "work-title" ] (single string)))
+           |> andMap (maybe (path [ "movement-title" ] (single string)))
+           |> andMap (path [ "credit", "credit-words" ] (list string))
+           |> andMap (maybe (path [ "identification", "creator" ] (single parseCreator)))
+           |> andMap (path [ "part-list", "score-part" ] (list parsePlp))
+           |> andMap (path [ "part" ] (list parsePart))
+
+
+-}
+
+
 andMap : Decoder a -> Decoder (a -> b) -> Decoder b
 andMap =
     map2 (|>)
