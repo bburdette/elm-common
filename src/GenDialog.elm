@@ -53,15 +53,15 @@ type Msg msg
     | Noop
 
 
-type alias Model viewdata model msg return =
-    { view : viewdata -> model -> Element msg
+type alias Model model msg return =
+    { view : model -> Element msg
     , update : msg -> model -> Transition model return
     , model : model
-    , underLay : viewdata -> Element ()
+    , underLay : Element ()
     }
 
 
-update : Msg msg -> Model viewdata model msg return -> Transition (Model viewdata model msg return) return
+update : Msg msg -> Model model msg return -> Transition (Model model msg return) return
 update msg model =
     case msg of
         EltMsg emsg ->
@@ -82,45 +82,45 @@ update msg model =
             Dialog model
 
 
-view : viewdata -> Model viewdata model msg return -> Element (Msg msg)
-view viewdata model =
+view : Model model msg return -> Element (Msg msg)
+view model =
     E.column
         [ E.height E.fill
         , E.width E.fill
-        , E.inFront (overlay viewdata model)
+        , E.inFront (overlay model)
         ]
-        [ model.underLay viewdata
+        [ model.underLay
             |> E.map (\_ -> Noop)
         ]
 
 
-layout : viewdata -> Model viewdata model msg return -> Html (Msg msg)
-layout viewdata model =
+layout : Model model msg return -> Html (Msg msg)
+layout model =
     E.layout
-        [ E.inFront (overlay viewdata model)
+        [ E.inFront (overlay model)
 
         -- , E.height E.fill
         -- , E.width E.fill
         ]
-        (model.underLay viewdata
+        (model.underLay
             |> E.map (\_ -> Noop)
         )
 
 
-overlay : viewdata -> Model viewdata model msg return -> Element (Msg msg)
-overlay viewdata model =
+overlay : Model model msg return -> Element (Msg msg)
+overlay model =
     E.column
         [ E.height E.fill
         , E.width E.fill
         , EBg.color <| E.rgba 0.5 0.5 0.5 0.5
-        , E.inFront (dialogView viewdata model)
+        , E.inFront (dialogView model)
         , EE.onClick CancelClick
         ]
         []
 
 
-dialogView : viewdata -> Model viewdata model msg return -> Element (Msg msg)
-dialogView viewdata model =
+dialogView : Model model msg return -> Element (Msg msg)
+dialogView model =
     E.column
         [ EB.color <| E.rgb 0 0 0
         , E.centerX
@@ -138,5 +138,5 @@ dialogView viewdata model =
                     }
                 )
         ]
-        [ E.row [ E.centerX ] [ E.map EltMsg (model.view viewdata model.model) ]
+        [ E.row [ E.centerX ] [ E.map EltMsg (model.view model.model) ]
         ]

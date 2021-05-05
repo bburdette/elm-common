@@ -17,18 +17,19 @@ import Util
 
 
 type alias GDModel =
-    GD.Model Palette Model Msg Int
+    GD.Model Model Msg Int
 
 
 type alias Model =
     { choices : Array String
     , selected : Maybe Int
     , search : String
+    , buttonStyle : List (E.Attribute Msg)
     }
 
 
 type alias Palette =
-    { buttonStyle : List (E.Attribute ()) }
+    {}
 
 
 type Msg
@@ -44,14 +45,14 @@ selectedrow =
     [ EBk.color TC.lightBlue ]
 
 
-view : Palette -> Model -> Element Msg
-view palette model =
+view : Model -> Element Msg
+view model =
     let
         ls =
             String.toLower model.search
 
-        buttonStyle =
-            List.map (E.mapAttribute (\_ -> Noop)) palette.buttonStyle
+        -- buttonStyle =
+        --     List.map (E.mapAttribute (\_ -> Noop)) palette.buttonStyle
     in
     E.column [ E.width <| E.px 500, E.height <| E.px 500, E.spacing 10 ]
         [ EI.text []
@@ -81,10 +82,10 @@ view palette model =
                 |> A.toList
             )
         , E.row [ E.width E.fill, E.spacing 10 ]
-            [ EI.button buttonStyle
+            [ EI.button model.buttonStyle
                 { onPress = Just OkClick, label = E.text "Ok" }
             , EI.button
-                buttonStyle
+                model.buttonStyle
                 { onPress = Just CancelClick, label = E.text "Cancel" }
             ]
         ]
@@ -111,7 +112,7 @@ update msg model =
             GD.Dialog model
 
 
-init : Model -> (Palette -> Element ()) -> GDModel
+init : Model -> Element () -> GDModel
 init model underLay =
     { view = view
     , update = update
