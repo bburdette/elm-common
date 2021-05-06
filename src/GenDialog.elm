@@ -54,7 +54,7 @@ type Msg msg
 
 
 type alias Model model msg return =
-    { view : model -> Element msg
+    { view : Maybe Util.Size -> model -> Element msg
     , update : msg -> model -> Transition model return
     , model : model
     , underLay : Element ()
@@ -142,5 +142,10 @@ dialogView mbmax model =
             , E.width E.fill
             , E.height E.fill
             ]
-            [ E.map EltMsg (model.view model.model) ]
+            [ E.map EltMsg
+                (model.view
+                    (mbmax |> Maybe.map (\s -> { width = s.width - 30, height = s.height - 30 }))
+                    model.model
+                )
+            ]
         ]

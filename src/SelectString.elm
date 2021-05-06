@@ -9,6 +9,7 @@ import Element.Font as EF
 import Element.Input as EI
 import Element.Region
 import GenDialog as GD
+import Html.Attributes
 import TangoColors as TC
 import Time exposing (Zone)
 import Util
@@ -43,8 +44,8 @@ selectedrow =
     [ EBk.color TC.lightBlue ]
 
 
-view : Model -> Element Msg
-view model =
+view : Maybe Util.Size -> Model -> Element Msg
+view mbmax model =
     let
         ls =
             String.toLower model.search
@@ -62,9 +63,8 @@ view model =
             }
         , E.column
             [ E.scrollbars
-            , E.spacing 2
-            , E.height E.fill
-            , E.width E.fill
+            , E.height (mbmax |> Maybe.map (\m -> E.maximum m.height E.fill) |> Maybe.withDefault E.fill)
+            , E.width (mbmax |> Maybe.map (\m -> E.maximum m.width E.fill) |> Maybe.withDefault E.fill)
             ]
           <|
             (A.indexedMap
@@ -78,7 +78,14 @@ view model =
                                 else
                                     []
                         in
-                        E.el ((EE.onClick <| RowClick i) :: E.height (E.px 30) :: style) <| E.text s
+                        E.row
+                            ((EE.onClick <| RowClick i)
+                                :: E.width E.fill
+                                :: (E.height <| E.px 30)
+                                :: style
+                            )
+                        <|
+                            [ E.text s ]
 
                     else
                         E.none
@@ -100,7 +107,12 @@ update : Msg -> Model -> GD.Transition Model Int
 update msg model =
     case msg of
         RowClick i ->
-            GD.Dialog { model | selected = Just i }
+            if model.selected == Just i then
+                -- double click selection
+                GD.Ok i
+
+            else
+                GD.Dialog { model | selected = Just i }
 
         SearchChanged s ->
             GD.Dialog { model | search = s }
