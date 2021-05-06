@@ -1,7 +1,5 @@
 module SelectString exposing (GDModel, Model, Msg(..), init, update, view)
 
--- import BisCommon as BC
-
 import Array as A exposing (Array)
 import Element as E exposing (Element)
 import Element.Background as EBk
@@ -50,18 +48,25 @@ view model =
     let
         ls =
             String.toLower model.search
-
-        -- buttonStyle =
-        --     List.map (E.mapAttribute (\_ -> Noop)) palette.buttonStyle
     in
-    E.column [ E.width <| E.px 500, E.height <| E.px 500, E.spacing 10 ]
+    E.column
+        [ E.spacing 10
+        , E.height E.fill
+        , E.width E.fill
+        ]
         [ EI.text []
             { onChange = SearchChanged
             , text = model.search
             , placeholder = Nothing
             , label = EI.labelLeft [] <| E.text "search"
             }
-        , E.column [ E.width E.fill, E.height <| E.px 400, E.scrollbarY, E.spacing 2 ] <|
+        , E.column
+            [ E.scrollbars
+            , E.spacing 2
+            , E.height E.fill
+            , E.width E.fill
+            ]
+          <|
             (A.indexedMap
                 (\i s ->
                     if String.contains ls (String.toLower s) then
@@ -73,7 +78,7 @@ view model =
                                 else
                                     []
                         in
-                        E.row ((EE.onClick <| RowClick i) :: E.height (E.px 30) :: E.width E.fill :: style) [ E.text s ]
+                        E.el ((EE.onClick <| RowClick i) :: E.height (E.px 30) :: style) <| E.text s
 
                     else
                         E.none
@@ -81,7 +86,7 @@ view model =
                 model.choices
                 |> A.toList
             )
-        , E.row [ E.width E.fill, E.spacing 10 ]
+        , E.row [ E.width E.shrink, E.spacing 10 ]
             [ EI.button model.buttonStyle
                 { onPress = Just OkClick, label = E.text "Ok" }
             , EI.button

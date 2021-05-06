@@ -82,47 +82,46 @@ update msg model =
             Dialog model
 
 
-view : Model model msg return -> Element (Msg msg)
-view model =
+view : Maybe Util.Size -> Model model msg return -> Element (Msg msg)
+view mbmax model =
     E.column
         [ E.height E.fill
         , E.width E.fill
-        , E.inFront (overlay model)
+        , E.inFront (overlay mbmax model)
         ]
         [ model.underLay
             |> E.map (\_ -> Noop)
         ]
 
 
-layout : Model model msg return -> Html (Msg msg)
-layout model =
+layout : Maybe Util.Size -> Model model msg return -> Html (Msg msg)
+layout mbmax model =
     E.layout
-        [ E.inFront (overlay model)
-
-        -- , E.height E.fill
-        -- , E.width E.fill
+        [ E.inFront (overlay mbmax model)
         ]
         (model.underLay
             |> E.map (\_ -> Noop)
         )
 
 
-overlay : Model model msg return -> Element (Msg msg)
-overlay model =
+overlay : Maybe Util.Size -> Model model msg return -> Element (Msg msg)
+overlay mbmax model =
     E.column
-        [ E.height E.fill
-        , E.width E.fill
+        [ E.width E.fill
+        , E.height E.fill
         , EBg.color <| E.rgba 0.5 0.5 0.5 0.5
-        , E.inFront (dialogView model)
+        , E.inFront (dialogView mbmax model)
         , EE.onClick CancelClick
         ]
         []
 
 
-dialogView : Model model msg return -> Element (Msg msg)
-dialogView model =
+dialogView : Maybe Util.Size -> Model model msg return -> Element (Msg msg)
+dialogView mbmax model =
     E.column
-        [ EB.color <| E.rgb 0 0 0
+        [ E.height (mbmax |> Maybe.map (\x -> E.maximum x.height E.fill) |> Maybe.withDefault E.fill)
+        , E.width (mbmax |> Maybe.map (\x -> E.maximum x.width E.fill) |> Maybe.withDefault E.fill)
+        , EB.color <| E.rgb 0 0 0
         , E.centerX
         , E.centerY
         , EB.width 5
@@ -138,5 +137,10 @@ dialogView model =
                     }
                 )
         ]
-        [ E.row [ E.centerX ] [ E.map EltMsg (model.view model.model) ]
+        [ E.row
+            [ E.centerX
+            , E.width E.fill
+            , E.height E.fill
+            ]
+            [ E.map EltMsg (model.view model.model) ]
         ]
