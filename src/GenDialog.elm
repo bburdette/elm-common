@@ -41,12 +41,6 @@ type Transition model return
     | Cancel
 
 
-type TextMsg
-    = TmOk
-    | TmCancel
-    | TmNoop
-
-
 type Msg msg
     = EltMsg msg
     | CancelClick
@@ -139,8 +133,7 @@ dialogView mbmax model =
         ]
         [ E.row
             [ E.centerX
-            , E.width E.fill
-            , E.height E.fill
+            , E.centerY
             ]
             [ E.map EltMsg
                 (model.view
