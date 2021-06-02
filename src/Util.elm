@@ -1,4 +1,4 @@
-module Util exposing (Size, Stopoid(..), andMap, captchaQ, deadEndToString, deadEndsToString, first, foldUntil, httpErrorString, mapNothing, maxInt, mbl, mblist, minInt, monthInt, paramParser, paramsParser, problemToString, rest, rslist, showTime, splitAt, trueforany, truncateDots)
+module Util exposing (Size, Stopoid(..), andMap, captchaQ, deadEndToString, deadEndsToString, first, foldUntil, httpErrorString, isJust, mapNothing, maxInt, mbl, mblist, minInt, monthInt, paramParser, paramsParser, problemToString, rest, rslist, showTime, splitAt, trueforany, truncateDots)
 
 import Dict exposing (Dict)
 import Element exposing (..)
@@ -105,6 +105,16 @@ mapNothing aprime mba =
 
         Nothing ->
             Just aprime
+
+
+isJust : Maybe a -> Bool
+isJust maybe =
+    case maybe of
+        Just _ ->
+            True
+
+        Nothing ->
+            False
 
 
 trueforany : (a -> Bool) -> List a -> Bool
