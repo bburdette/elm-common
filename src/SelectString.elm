@@ -54,7 +54,7 @@ view mbsize model =
             , placeholder = Nothing
             , label = EI.labelLeft [] <| E.text "search"
             }
-        , E.column [ E.width E.fill, E.height <| E.px 400, E.scrollbarY, E.spacing 2 ] <|
+        , E.column [ E.width E.fill, E.height E.fill, E.scrollbarY, E.spacing 2 ] <|
             List.map
                 (\( i, s ) ->
                     if String.contains ls (String.toLower s) then
