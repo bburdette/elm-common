@@ -38,12 +38,16 @@ selectedrow =
 
 
 view : Maybe Util.Size -> Model a -> Element (Msg a)
-view viewdata model =
+view mbsize model =
     let
         ls =
             String.toLower model.search
     in
-    E.column [ E.width <| E.px 500, E.height <| E.px 500, E.spacing 10 ]
+    E.column
+        [ E.width (mbsize |> Maybe.map .width |> Maybe.withDefault 500 |> E.px)
+        , E.height (mbsize |> Maybe.map .height |> Maybe.withDefault 500 |> E.px)
+        , E.spacing 10
+        ]
         [ EI.text []
             { onChange = SearchChanged
             , text = model.search
