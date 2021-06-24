@@ -1,5 +1,6 @@
 module SelectString exposing (GDModel, Model, Msg(..), init, update, view)
 
+import Array as A exposing (Array)
 import Element as E exposing (Element)
 import Element.Background as EBk
 import Element.Border as EBd
@@ -8,44 +9,51 @@ import Element.Font as EF
 import Element.Input as EI
 import Element.Region
 import GenDialog as GD
+import Html.Attributes
 import TangoColors as TC
 import Time exposing (Zone)
 import Util
 
 
-type alias Model a =
-    { choices : List ( a, String )
-    , selected : Maybe a
+type alias GDModel =
+    GD.Model Model Msg Int
+
+
+type alias Model =
+    { choices : Array String
+    , selected : Maybe Int
     , search : String
+    , buttonStyle : List (E.Attribute Msg)
     }
 
 
-type Msg a
-    = RowClick a
+type alias Palette =
+    {}
+
+
+type Msg
+    = RowClick Int
     | OkClick
     | CancelClick
     | SearchChanged String
+    | Noop
 
 
-type alias GDModel a =
-    GD.Model (Model a) (Msg a) a
-
-
-selectedrow : List (E.Attribute (Msg a))
+selectedrow : List (E.Attribute Msg)
 selectedrow =
     [ EBk.color TC.lightBlue ]
 
 
-view : List (E.Attribute (Msg a)) -> Maybe Util.Size -> Model a -> Element (Msg a)
-view buttonStyle mbsize model =
+view : Maybe Util.Size -> Model -> Element Msg
+view mbmax model =
     let
         ls =
             String.toLower model.search
     in
     E.column
-        [ E.width (mbsize |> Maybe.map .width |> Maybe.withDefault 500 |> E.px)
-        , E.height (mbsize |> Maybe.map .height |> Maybe.withDefault 500 |> E.px)
-        , E.spacing 10
+        [ E.spacing 10
+        , E.height E.fill
+        , E.width E.fill
         ]
         [ EI.text []
             { onChange = SearchChanged
@@ -53,9 +61,14 @@ view buttonStyle mbsize model =
             , placeholder = Nothing
             , label = EI.labelLeft [] <| E.text "search"
             }
-        , E.column [ E.width E.fill, E.height E.fill, E.scrollbarY, E.spacing 2 ] <|
-            List.map
-                (\( i, s ) ->
+        , E.column
+            [ E.scrollbars
+            , E.height (mbmax |> Maybe.map (\m -> E.maximum m.height E.fill) |> Maybe.withDefault E.fill)
+            , E.width (mbmax |> Maybe.map (\m -> E.maximum m.width E.fill) |> Maybe.withDefault E.fill)
+            ]
+          <|
+            (A.indexedMap
+                (\i s ->
                     if String.contains ls (String.toLower s) then
                         let
                             style =
@@ -67,31 +80,39 @@ view buttonStyle mbsize model =
                         in
                         E.row
                             ((EE.onClick <| RowClick i)
-                                :: E.height (E.px 30)
                                 :: E.width E.fill
+                                :: (E.height <| E.px 30)
                                 :: style
                             )
+                        <|
                             [ E.text s ]
 
                     else
                         E.none
                 )
                 model.choices
-        , E.row [ E.width E.fill, E.spacing 10 ]
-            [ EI.button buttonStyle
+                |> A.toList
+            )
+        , E.row [ E.width E.shrink, E.spacing 10 ]
+            [ EI.button model.buttonStyle
                 { onPress = Just OkClick, label = E.text "Ok" }
             , EI.button
-                buttonStyle
+                model.buttonStyle
                 { onPress = Just CancelClick, label = E.text "Cancel" }
             ]
         ]
 
 
-update : Msg a -> Model a -> GD.Transition (Model a) a
+update : Msg -> Model -> GD.Transition Model Int
 update msg model =
     case msg of
         RowClick i ->
-            GD.Dialog { model | selected = Just i }
+            if model.selected == Just i then
+                -- double click selection
+                GD.Ok i
+
+            else
+                GD.Dialog { model | selected = Just i }
 
         SearchChanged s ->
             GD.Dialog { model | search = s }
@@ -104,10 +125,13 @@ update msg model =
                 |> Maybe.map GD.Ok
                 |> Maybe.withDefault GD.Cancel
 
+        Noop ->
+            GD.Dialog model
 
-init : Model a -> List (E.Attribute (Msg a)) -> Element () -> GDModel a
-init model buttonStyle underLay =
-    { view = view buttonStyle
+
+init : Model -> Element () -> GDModel
+init model underLay =
+    { view = view
     , update = update
     , model = model
     , underLay = underLay
