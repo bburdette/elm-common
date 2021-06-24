@@ -25,6 +25,7 @@ type Msg a
     | OkClick
     | CancelClick
     | SearchChanged String
+    | Noop
 
 
 type alias GDModel a =
@@ -103,6 +104,9 @@ update msg model =
             model.selected
                 |> Maybe.map GD.Ok
                 |> Maybe.withDefault GD.Cancel
+
+        Noop ->
+            GD.Dialog model
 
 
 init : Model a -> List (E.Attribute (Msg a)) -> Element () -> GDModel a
