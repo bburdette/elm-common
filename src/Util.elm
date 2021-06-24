@@ -1,4 +1,4 @@
-module Util exposing (Size, Stopoid(..), andMap, captchaQ, deadEndToString, deadEndsToString, first, foldUntil, httpErrorString, mapNothing, maxInt, mbl, mblist, minInt, monthInt, paramParser, paramsParser, problemToString, rest, rslist, showTime, splitAt, trueforany, truncateDots)
+module Util exposing (Size, Stopoid(..), andMap, captchaQ, compareColor, deadEndToString, deadEndsToString, first, foldUntil, httpErrorString, mapNothing, maxInt, mbl, mblist, minInt, monthInt, paramParser, paramsParser, problemToString, rest, rslist, showTime, splitAt, trueforany, truncateDots)
 
 import Dict exposing (Dict)
 import Element exposing (..)
@@ -30,6 +30,33 @@ maxInt =
 minInt : Int
 minInt =
     -9007199254740991
+
+
+compareColor : Element.Color -> Element.Color -> Order
+compareColor l r =
+    let
+        lrgb =
+            Element.toRgb l
+
+        rrgb =
+            Element.toRgb r
+    in
+    case compare lrgb.red rrgb.red of
+        EQ ->
+            case compare lrgb.green rrgb.green of
+                EQ ->
+                    case compare lrgb.blue rrgb.blue of
+                        EQ ->
+                            compare lrgb.alpha rrgb.alpha
+
+                        b ->
+                            b
+
+                c ->
+                    c
+
+        a ->
+            a
 
 
 paramParser : P.Parser ( String, String )
