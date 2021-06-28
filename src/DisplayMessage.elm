@@ -43,11 +43,11 @@ view : List (Attribute Msg) -> Maybe Util.Size -> Model -> Element Msg
 view buttonStyle mbsize model =
     column
         [ width (mbsize |> Maybe.map .width |> Maybe.withDefault 500 |> px)
-        , height (mbsize |> Maybe.map .height |> Maybe.withDefault 500 |> px)
+        , height shrink
         , spacing 10
         ]
-        [ paragraph [] [ text model.message ]
-        , Input.button (buttonStyle ++ [])
+        [ row [ centerX ] [ paragraph [] [ text model.message ] ]
+        , Input.button (buttonStyle ++ [ centerX ])
             { onPress = Just OkayThen
             , label = text "okay"
             }
