@@ -7,9 +7,14 @@ import Element.Border as Border
 import Element.Events exposing (onClick)
 import Element.Font as Font
 import Element.Input as Input
+import GenDialog as GD
 import Html exposing (Html)
 import TangoColors as Color
 import Util exposing (httpErrorString)
+
+
+type alias GDModel =
+    GD.Model Model Msg ()
 
 
 type alias Model =
@@ -17,9 +22,13 @@ type alias Model =
     }
 
 
-initialModel : String -> Model
-initialModel message =
-    { message = message }
+init : List (Attribute Msg) -> String -> Element () -> GDModel
+init buttonStyle message underLay =
+    { view = view buttonStyle
+    , update = update
+    , model = { message = message }
+    , underLay = underLay
+    }
 
 
 type Msg
@@ -30,9 +39,13 @@ type Cmd
     = Okay
 
 
-view : Model -> Element Msg
-view model =
-    column [ width fill, padding 10, spacing 8 ]
+view : List (Attribute Msg) -> Maybe Util.Size -> Model -> Element Msg
+view buttonStyle mbsize model =
+    column
+        [ width (mbsize |> Maybe.map .width |> Maybe.withDefault 500 |> px)
+        , height (mbsize |> Maybe.map .height |> Maybe.withDefault 500 |> px)
+        , spacing 10
+        ]
         [ paragraph [] [ text model.message ]
         , Input.button (buttonStyle ++ [])
             { onPress = Just OkayThen
@@ -41,8 +54,8 @@ view model =
         ]
 
 
-update : Msg -> Model -> ( Model, Cmd )
+update : Msg -> Model -> GD.Transition Model ()
 update msg model =
     case msg of
         OkayThen ->
-            ( model, Okay )
+            GD.Ok ()
