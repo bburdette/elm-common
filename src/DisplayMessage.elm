@@ -1,4 +1,4 @@
-module DisplayError exposing (..)
+module DisplayMessage exposing (..)
 
 import Common exposing (buttonStyle)
 import Element exposing (..)
@@ -13,13 +13,13 @@ import Util exposing (httpErrorString)
 
 
 type alias Model =
-    { errorMessage : String
+    { message : String
     }
 
 
 initialModel : String -> Model
-initialModel errorMessage =
-    { errorMessage = errorMessage }
+initialModel message =
+    { message = message }
 
 
 type Msg
@@ -33,7 +33,7 @@ type Cmd
 view : Model -> Element Msg
 view model =
     column [ width fill, padding 10, spacing 8 ]
-        [ paragraph [] [ text model.errorMessage ]
+        [ paragraph [] [ text model.message ]
         , Input.button (buttonStyle ++ [])
             { onPress = Just OkayThen
             , label = text "okay"
