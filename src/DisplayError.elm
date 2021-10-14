@@ -17,8 +17,8 @@ type alias Model =
     }
 
 
-initialModel : String -> Model
-initialModel errorMessage =
+init : String -> Model
+init errorMessage =
     { errorMessage = errorMessage }
 
 
