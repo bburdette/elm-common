@@ -3,9 +3,11 @@ module Common exposing
     , buttonStyle
     , countString
     , dateElt
+    , disabledButtonStyle
     , edges
     , lightOrange
     , lighterBlue
+    , linkStyle
     , maxString
     , menuBlue
     , navChoice
@@ -91,14 +93,15 @@ navChoice ccolor currentmode mmsg mode caption =
             [ Font.bold
             , onClick (mmsg mode)
             , Background.color ccolor
-            , paddingEach { edges | right = 3, left = 3, top = 2, bottom = 6 }
+            , paddingEach { edges | right = 3, left = 3, top = 10, bottom = 10 }
+            , height fill
             ]
             [ text txt ]
 
     else
         row
             [ onClick (mmsg mode)
-            , paddingEach { edges | bottom = 6 }
+            , paddingEach { edges | right = 3, left = 3, top = 10, bottom = 10 }
             ]
             [ text txt ]
 
@@ -137,13 +140,10 @@ navbar level currentmode mmsg choices =
         ccolor =
             navbarColor (level + 1)
     in
-    paragraph
+    row
         [ Background.color (navbarColor level)
-        , spacing 5
-        , paddingEach { edges | top = 8, bottom = 0 }
         , width fill
         ]
-        -- (text (String.fromInt level) ::
         (List.intersperse
             (text " ")
             (List.map
@@ -213,6 +213,7 @@ accordion bottomone show togglemsg caption content =
         ]
 
 
+tagButtonStyle : List (Attribute msg)
 tagButtonStyle =
     [ Background.color Color.blue
     , Font.color Color.white
@@ -272,6 +273,14 @@ buttonStyle =
     , paddingXY 10 5
     , Border.rounded 3
     ]
+
+
+disabledButtonStyle =
+    buttonStyle ++ [ Background.color Color.grey ]
+
+
+linkStyle =
+    [ Font.color Color.darkBlue, Font.underline ]
 
 
 lightOrange =

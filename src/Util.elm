@@ -1,25 +1,4 @@
-module Util exposing
-    ( Size
-    , Stopoid(..)
-    , andMap
-    , captchaQ
-    , deadEndToString
-    , deadEndsToString
-    , first
-    , foldUntil
-    , httpErrorString
-    , maxInt
-    , mbl
-    , mblist
-    , minInt
-    , monthInt
-    , paramParser
-    , paramsParser
-    , problemToString
-    , rest
-    , rslist
-    , trueforany
-    )
+module Util exposing (Size, Stopoid(..), andMap, captchaQ, compareColor, deadEndToString, deadEndsToString, first, foldUntil, httpErrorString, isJust, mapNothing, maxInt, mbl, mblist, minInt, monthInt, paramParser, paramsParser, problemToString, rest, rslist, showTime, splitAt, trueforany, truncateDots)
 
 import Dict exposing (Dict)
 import Element exposing (..)
@@ -29,7 +8,7 @@ import Element.Events exposing (onClick)
 import Element.Font as Font
 import Element.Input as Input
 import Http
-import Json.Decode exposing (map2, Decoder)
+import Json.Decode exposing (Decoder, map2)
 import ParseHelp exposing (listOf)
 import Parser as P exposing ((|.), (|=), Problem(..), symbol)
 import Random exposing (Seed, int, step)
@@ -51,6 +30,33 @@ maxInt =
 minInt : Int
 minInt =
     -9007199254740991
+
+
+compareColor : Element.Color -> Element.Color -> Order
+compareColor l r =
+    let
+        lrgb =
+            Element.toRgb l
+
+        rrgb =
+            Element.toRgb r
+    in
+    case compare lrgb.red rrgb.red of
+        EQ ->
+            case compare lrgb.green rrgb.green of
+                EQ ->
+                    case compare lrgb.blue rrgb.blue of
+                        EQ ->
+                            compare lrgb.alpha rrgb.alpha
+
+                        b ->
+                            b
+
+                c ->
+                    c
+
+        a ->
+            a
 
 
 paramParser : P.Parser ( String, String )
@@ -116,6 +122,26 @@ first f l =
 
         Nothing ->
             Nothing
+
+
+mapNothing : a -> Maybe a -> Maybe a
+mapNothing aprime mba =
+    case mba of
+        Just a ->
+            Just a
+
+        Nothing ->
+            Just aprime
+
+
+isJust : Maybe a -> Bool
+isJust maybe =
+    case maybe of
+        Just _ ->
+            True
+
+        Nothing ->
+            False
 
 
 trueforany : (a -> Bool) -> List a -> Bool
@@ -200,6 +226,24 @@ foldUntil fn initb lst =
                     foldUntil fn updb rst
 
 
+splitAt : (a -> Bool) -> List a -> ( List a, List a )
+splitAt test list =
+    case list of
+        a :: b ->
+            if test a then
+                ( [], a :: b )
+
+            else
+                let
+                    ( x, y ) =
+                        splitAt test b
+                in
+                ( a :: x, y )
+
+        [] ->
+            ( [], [] )
+
+
 monthInt : Time.Month -> Int
 monthInt month =
     case month of
@@ -240,6 +284,21 @@ monthInt month =
             12
 
 
+showTime : Time.Zone -> Time.Posix -> String
+showTime zone time =
+    (String.fromInt <| Time.toYear zone time)
+        ++ "/"
+        ++ (String.fromInt <| monthInt <| Time.toMonth zone time)
+        ++ "/"
+        ++ (String.fromInt <| Time.toDay zone time)
+        ++ " "
+        ++ (String.fromInt <| Time.toHour zone time)
+        ++ ":"
+        ++ (String.fromInt <| Time.toMinute zone time)
+        ++ ":"
+        ++ (String.fromInt <| Time.toSecond zone time)
+
+
 captchaQ : Seed -> ( Seed, String, Int )
 captchaQ seed =
     let
@@ -253,6 +312,19 @@ captchaQ seed =
     , "Whats " ++ String.fromInt a ++ " + " ++ String.fromInt b ++ "?"
     , a + b
     )
+
+
+truncateDots : String -> Int -> String
+truncateDots str len =
+    let
+        l =
+            String.length str
+    in
+    if l > len + 3 then
+        String.left len str ++ "..."
+
+    else
+        str
 
 
 deadEndsToString : List P.DeadEnd -> String
@@ -309,6 +381,26 @@ problemToString p =
 
         BadRepeat ->
             "bad repeat"
+
+
+
+{-
+
+   andMap example.
+
+   parseMX : Decoder MusicXml
+   parseMX =
+       succeed MusicXml
+           |> andMap (maybe (stringAttr "version"))
+           |> andMap (maybe (path [ "work", "work-title" ] (single string)))
+           |> andMap (maybe (path [ "movement-title" ] (single string)))
+           |> andMap (path [ "credit", "credit-words" ] (list string))
+           |> andMap (maybe (path [ "identification", "creator" ] (single parseCreator)))
+           |> andMap (path [ "part-list", "score-part" ] (list parsePlp))
+           |> andMap (path [ "part" ] (list parsePart))
+
+
+-}
 
 
 andMap : Decoder a -> Decoder (a -> b) -> Decoder b
