@@ -16,7 +16,6 @@ module Common exposing
     , selectionColorDark
     , tagButtonStyle
     , tagLikeParagraph
-    , tagParagraph
     , tagPill
     , tagPillMax
     , workaroundMultiline
