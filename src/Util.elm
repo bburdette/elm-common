@@ -286,21 +286,6 @@ monthInt month =
 
 
 
--- showTime : Time.Zone -> Time.Posix -> String
--- showTime zone time =
---     (String.fromInt <| Time.toYear zone time)
---         ++ "/"
---         ++ (String.fromInt <| monthInt <| Time.toMonth zone time)
---         ++ "/"
---         ++ (String.fromInt <| Time.toDay zone time)
---         ++ " "
---         ++ (String.fromInt <| Time.toHour zone time)
---         ++ ":"
---         ++ (String.fromInt <| Time.toMinute zone time)
---         ++ ":"
---         ++ (String.fromInt <| Time.toSecond zone time)
-
-
 showDateTime : Time.Zone -> Time.Posix -> String
 showDateTime zone time =
     (String.fromInt <| Time.toYear zone time)
