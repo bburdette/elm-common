@@ -4,6 +4,7 @@ module Common exposing
     , countString
     , dateElt
     , disabledButtonStyle
+    , disabledTextEditStyle
     , edges
     , lightOrange
     , lighterBlue
@@ -264,6 +265,10 @@ tagLikeParagraph tags =
                 tags
             )
         )
+
+
+disabledTextEditStyle =
+    [ Background.color Color.grey, Font.color Color.darkGrey ]
 
 
 buttonStyle =

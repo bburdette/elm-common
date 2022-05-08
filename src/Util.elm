@@ -1,5 +1,6 @@
-module Util exposing (Size, Stopoid(..), andMap, captchaQ, compareColor, deadEndToString, deadEndsToString, first, foldUntil, httpErrorString, isJust, mapNothing, maxInt, mbl, mblist, minInt, monthInt, paramParser, paramsParser, problemToString, rest, rslist, showTime, splitAt, trueforany, truncateDots)
+module Util exposing (Size, Stopoid(..), YMDMS, andMap, captchaQ, compareColor, deadEndToString, deadEndsToString, first, foldUntil, httpErrorString, isJust, leadingZeroInt, mapNothing, maxInt, mbl, mblist, minInt, monthInt, paramParser, paramsParser, parseTime, problemToString, rest, rslist, sameDay, showDateTime, showTime, splitAt, toTimeMonth, trueforany, truncateDots, ymdsParser)
 
+import DateTime
 import Dict exposing (Dict)
 import Element exposing (..)
 import Element.Background as Background
@@ -10,7 +11,7 @@ import Element.Input as Input
 import Http
 import Json.Decode exposing (Decoder, map2)
 import ParseHelp exposing (listOf)
-import Parser as P exposing ((|.), (|=), Problem(..), symbol)
+import Parser as P exposing ((|.), (|=), Parser, Problem(..), oneOf, succeed, symbol)
 import Random exposing (Seed, int, step)
 import TangoColors as Color
 import Time
@@ -284,19 +285,142 @@ monthInt month =
             12
 
 
-showTime : Time.Zone -> Time.Posix -> String
-showTime zone time =
+
+showDateTime : Time.Zone -> Time.Posix -> String
+showDateTime zone time =
     (String.fromInt <| Time.toYear zone time)
         ++ "/"
-        ++ (String.fromInt <| monthInt <| Time.toMonth zone time)
+        ++ (Time.toMonth zone time
+                |> monthInt
+                |> String.fromInt
+                |> String.padLeft 2 '0'
+           )
         ++ "/"
-        ++ (String.fromInt <| Time.toDay zone time)
+        ++ (Time.toDay zone time
+                |> String.fromInt
+                |> String.padLeft 2 '0'
+           )
         ++ " "
-        ++ (String.fromInt <| Time.toHour zone time)
+        ++ (Time.toHour zone time |> String.fromInt |> String.padLeft 2 '0')
         ++ ":"
-        ++ (String.fromInt <| Time.toMinute zone time)
+        ++ (Time.toMinute zone time |> String.fromInt |> String.padLeft 2 '0')
         ++ ":"
-        ++ (String.fromInt <| Time.toSecond zone time)
+        ++ (Time.toSecond zone time |> String.fromInt |> String.padLeft 2 '0')
+
+
+showTime : Time.Zone -> Time.Posix -> String
+showTime zone time =
+    (Time.toHour zone time |> String.fromInt |> String.padLeft 2 '0')
+        ++ ":"
+        ++ (Time.toMinute zone time |> String.fromInt |> String.padLeft 2 '0')
+        ++ ":"
+        ++ (Time.toSecond zone time |> String.fromInt |> String.padLeft 2 '0')
+
+
+sameDay : Time.Zone -> Time.Posix -> Time.Posix -> Bool
+sameDay zone time1 time2 =
+    (Time.toYear zone time1 == Time.toYear zone time2)
+        && (Time.toMonth zone time1 == Time.toMonth zone time2)
+        && (Time.toDay zone time1 == Time.toDay zone time2)
+
+
+toTimeMonth : Int -> Time.Month
+toTimeMonth monthnum =
+    case monthnum of
+        1 ->
+            Time.Jan
+
+        2 ->
+            Time.Feb
+
+        3 ->
+            Time.Mar
+
+        4 ->
+            Time.Apr
+
+        5 ->
+            Time.May
+
+        6 ->
+            Time.Jun
+
+        7 ->
+            Time.Jul
+
+        8 ->
+            Time.Aug
+
+        9 ->
+            Time.Sep
+
+        10 ->
+            Time.Oct
+
+        11 ->
+            Time.Nov
+
+        _ ->
+            Time.Dec
+
+
+parseTime : Time.Zone -> String -> Result (List P.DeadEnd) (Maybe Time.Posix)
+parseTime zone string =
+    P.run ymdsParser string
+        |> Result.map
+            (\x ->
+                DateTime.fromRawParts
+                    { year = x.year
+                    , month = toTimeMonth x.month
+                    , day = x.day
+                    }
+                    { hours = x.hour
+                    , minutes = x.minute
+                    , seconds = x.second
+                    , milliseconds = 0
+                    }
+                    |> Maybe.map
+                        (DateTime.toPosix
+                            >> (\p ->
+                                    Time.posixToMillis p
+                                        - DateTime.getTimezoneOffset zone p
+                                        |> Time.millisToPosix
+                               )
+                        )
+            )
+
+
+type alias YMDMS =
+    { year : Int
+    , month : Int
+    , day : Int
+    , hour : Int
+    , minute : Int
+    , second : Int
+    }
+
+
+leadingZeroInt : Parser Int
+leadingZeroInt =
+    succeed identity
+        |. P.chompWhile ((==) '0')
+        |= oneOf [ P.int, succeed 0 ]
+
+
+ymdsParser : Parser YMDMS
+ymdsParser =
+    succeed YMDMS
+        |= P.int
+        |. oneOf [ symbol "/", symbol "-" ]
+        |= leadingZeroInt
+        |. oneOf [ symbol "/", symbol "-" ]
+        |= leadingZeroInt
+        |. symbol " "
+        |= leadingZeroInt
+        |. symbol ":"
+        |= leadingZeroInt
+        |. symbol ":"
+        |= leadingZeroInt
 
 
 captchaQ : Seed -> ( Seed, String, Int )
