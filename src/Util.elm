@@ -1,5 +1,6 @@
-module Util exposing (Size, Stopoid(..), YMDMS, andMap, andNothing, captchaQ, compareColor, deadEndToString, deadEndsToString, first, foldUntil, httpErrorString, isJust, leadingZeroInt, mapNothing, maxInt, mbl, mblist, minInt, monthInt, paramParser, paramsParser, parseTime, problemToString, rest, rslist, sameDay, showDateTime, showTime, splitAt, toTimeMonth, trueforany, truncateDots, ymdsParser)
+module Util exposing (Size, Stopoid(..), YMDMS, andMap, andNothing, captchaQ, compareColor, deadEndToString, deadEndsToString, find, first, foldUntil, httpErrorString, insert, isJust, leadingZeroInt, mapNothing, maxInt, mbl, mblist, minInt, monthInt, paramParser, paramsParser, parseTime, problemToString, rest, rslist, sameDay, showDateTime, showTime, splitAt, toTimeMonth, trueforany, truncateDots, ymdsParser)
 
+import Array exposing (Array(..))
 import DateTime
 import Dict exposing (Dict)
 import Element exposing (..)
@@ -153,6 +154,37 @@ isJust maybe =
 
         Nothing ->
             False
+
+
+insert : Int -> a -> Array a -> Array a
+insert after elt array =
+    let
+        len =
+            Array.length array
+    in
+    Array.append
+        (Array.push elt (Array.slice 0 after array))
+        (Array.slice after (Array.length array) array)
+
+
+find : Array a -> Int -> Int -> (a -> Bool) -> Maybe ( Int, a )
+find array start incr test =
+    if start > Array.length array then
+        Nothing
+
+    else if start < 0 then
+        Nothing
+
+    else
+        Array.get start array
+            |> Maybe.andThen
+                (\a ->
+                    if test a then
+                        Just ( start, a )
+
+                    else
+                        find array (start + incr) incr test
+                )
 
 
 trueforany : (a -> Bool) -> List a -> Bool
