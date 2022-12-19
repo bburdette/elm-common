@@ -4,17 +4,11 @@ import Array exposing (Array(..))
 import DateTime
 import Dict exposing (Dict)
 import Element exposing (..)
-import Element.Background as Background
-import Element.Border as Border
-import Element.Events exposing (onClick)
-import Element.Font as Font
-import Element.Input as Input
 import Http
 import Json.Decode exposing (Decoder, map2)
 import ParseHelp exposing (listOf)
 import Parser as P exposing ((|.), (|=), Parser, Problem(..), oneOf, succeed, symbol)
 import Random exposing (Seed, int, step)
-import TangoColors as Color
 import Time
 
 
