@@ -1,9 +1,9 @@
-module Util exposing (Size, Stopoid(..), YMDMS, andMap, andNothing, captchaQ, compareColor, deadEndToString, deadEndsToString, find, first, foldUntil, httpErrorString, insert, isJust, leadingZeroInt, mapNothing, maxInt, mbl, mblist, minInt, monthInt, paramParser, paramsParser, parseTime, problemToString, rest, rslist, sameDay, showDateTime, showTime, splitAt, toTimeMonth, trueforany, truncateDots, ymdsParser)
+module Util exposing (Size, Stopoid(..), YMDMS, andMap, andNothing,  compareColor, deadEndToString, deadEndsToString, find, first, foldUntil, httpErrorString, insert, isJust, leadingZeroInt, mapNothing, maxInt, mbl, mblist, minInt, monthInt, paramParser, paramsParser, parseTime, problemToString, rest, rslist, sameDay, showDateTime, showTime, splitAt, toTimeMonth, trueforany, truncateDots, ymdsParser)
 
 import Array exposing (Array(..))
 import DateTime
 import Dict exposing (Dict)
-import Element exposing (..)
+import Element as E
 import Http
 import Json.Decode exposing (Decoder, map2)
 import ParseHelp exposing (listOf)
@@ -28,14 +28,14 @@ minInt =
     -9007199254740991
 
 
-compareColor : Element.Color -> Element.Color -> Order
+compareColor : E.Color -> E.Color -> Order
 compareColor l r =
     let
         lrgb =
-            Element.toRgb l
+            E.toRgb l
 
         rrgb =
-            Element.toRgb r
+            E.toRgb r
     in
     case compare lrgb.red rrgb.red of
         EQ ->
@@ -458,21 +458,6 @@ ymdsParser =
         |= leadingZeroInt
 
 
-captchaQ : Seed -> ( Seed, String, Int )
-captchaQ seed =
-    let
-        ( a, seed1 ) =
-            step (int 0 100) seed
-
-        ( b, seed2 ) =
-            step (int 0 100) seed1
-    in
-    ( seed2
-    , "Whats " ++ String.fromInt a ++ " + " ++ String.fromInt b ++ "?"
-    , a + b
-    )
-
-
 truncateDots : String -> Int -> String
 truncateDots str len =
     let
@@ -543,7 +528,7 @@ problemToString p =
 
 
 
-{-
+{-|
 
    andMap example.
 
@@ -558,10 +543,7 @@ problemToString p =
            |> andMap (path [ "part-list", "score-part" ] (list parsePlp))
            |> andMap (path [ "part" ] (list parsePart))
 
-
 -}
-
-
 andMap : Decoder a -> Decoder (a -> b) -> Decoder b
 andMap =
     map2 (|>)
