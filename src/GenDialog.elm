@@ -134,6 +134,8 @@ dialogView mbmax model =
         [ E.row
             [ E.centerX
             , E.centerY
+            , E.width E.fill
+            , E.height E.fill
             ]
             [ E.map EltMsg
                 (model.view
