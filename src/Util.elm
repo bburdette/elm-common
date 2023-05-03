@@ -1,15 +1,53 @@
-module Util exposing (Size, Stopoid(..), YMDMS, andMap, andNothing,  compareColor, deadEndToString, deadEndsToString, find, first, foldUntil, httpErrorString, insert, isJust, leadingZeroInt, mapNothing, maxInt, mbl, mblist, minInt, monthInt, paramParser, paramsParser, parseTime, problemToString, rest, rslist, sameDay, showDateTime, showTime, splitAt, toTimeMonth, trueforany, truncateDots, ymdsParser)
-
+module Util exposing (Size,
+     Stopoid(..),
+     YMDMS,
+     andMap,
+     andNothing,
+      compareColor,
+     deadEndToString,
+     deadEndsToString,
+     find,
+     first,
+     foldUntil,
+     httpErrorString,
+     insert,
+     isJust,
+     leadingZeroInt,
+     mapNothing,
+     maxInt,
+     mbl,
+     mblist,
+     minInt,
+     monthInt,
+     paramParser,
+     paramsParser,
+     parseTime,
+     problemToString,
+     rest,
+     rslist,
+     sameDay,
+     showDateTime,
+     showTime,
+     splitAt,
+     toTimeMonth,
+     trueforany,
+     truncateDots,
+     ymdsParser,
+     addToolTip)
 import Array exposing (Array(..))
 import DateTime
 import Dict exposing (Dict)
 import Element as E
+import Element.Border as EBd
+import Element.Background as EBk
+import Element.Font as EF
 import Http
 import Json.Decode exposing (Decoder, map2)
 import ParseHelp exposing (listOf)
 import Parser as P exposing ((|.), (|=), Parser, Problem(..), oneOf, succeed, symbol)
 import Random exposing (Seed, int, step)
 import Time
+import Html.Attributes
 
 
 type alias Size =
@@ -547,3 +585,20 @@ problemToString p =
 andMap : Decoder a -> Decoder (a -> b) -> Decoder b
 andMap =
     map2 (|>)
+
+
+{-| drop into element attribs to add a tooltip.
+-}
+addToolTip : (E.Element msg -> E.Attribute msg) -> E.Element Never -> E.Attribute msg
+addToolTip usher tooltip =
+    E.inFront <|
+        E.el
+            [ E.width E.fill
+            , E.height E.fill
+            , E.transparent True
+            , E.mouseOver [ E.transparent False ]
+            , (usher << E.map never) <|
+                E.el [ E.htmlAttribute (Html.Attributes.style "pointerEvents" "none") ]
+                    tooltip
+            ]
+            E.none
