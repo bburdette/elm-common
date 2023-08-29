@@ -15,7 +15,6 @@ import Time exposing (Zone)
 import Util
 
 
-
 {-
 
    -- how to use:
@@ -88,14 +87,15 @@ view mbmax model =
         ]
 
 
+layoutWith : { options : List E.Option } -> Maybe Util.Size -> Model model msg return -> Html (Msg msg)
+layoutWith layoutOptions mbmax model =
+    E.layoutWith layoutOptions [ E.inFront (overlay mbmax model) ]
+        (model.underLay
+            |> E.map (\_ -> Noop))
+
 layout : Maybe Util.Size -> Model model msg return -> Html (Msg msg)
 layout mbmax model =
-    E.layout
-        [ E.inFront (overlay mbmax model)
-        ]
-        (model.underLay
-            |> E.map (\_ -> Noop)
-        )
+    layoutWith { options = [] }  mbmax model
 
 
 overlay : Maybe Util.Size -> Model model msg return -> Element (Msg msg)
