@@ -24,7 +24,6 @@ module Common exposing
     , workaroundMultiline
     )
 
-import Array
 import Char
 import Element exposing (..)
 import Element.Background as Background
@@ -267,10 +266,12 @@ tagLikeParagraph tags =
         )
 
 
+disabledTextEditStyle : List (Attribute msg)
 disabledTextEditStyle =
     [ Background.color Color.grey, Font.color Color.darkGrey ]
 
 
+buttonStyle : List (Attribute msg)
 buttonStyle =
     [ Background.color Color.blue
     , Font.color Color.white
@@ -280,14 +281,17 @@ buttonStyle =
     ]
 
 
+disabledButtonStyle : List (Attribute msg)
 disabledButtonStyle =
     buttonStyle ++ [ Background.color Color.grey ]
 
 
+linkStyle : List (Attribute msg)
 linkStyle =
     [ Font.color Color.darkBlue, Font.underline ]
 
 
+lightOrange : Color
 lightOrange =
     rgb255 255 181 64
 
