@@ -44,8 +44,8 @@ view buttonStyle mbsize model =
             String.toLower model.search
     in
     E.column
-        [ E.width (mbsize |> Maybe.map .width |> Maybe.withDefault 500 |> E.px)
-        , E.height (mbsize |> Maybe.map .height |> Maybe.withDefault 500 |> E.px)
+        [ E.width (mbsize |> Maybe.map .width |> Maybe.map E.px |> Maybe.withDefault E.fill)
+        , E.height (mbsize |> Maybe.map .height |> Maybe.map E.px |> Maybe.withDefault E.fill)
         , E.spacing 10
         ]
         [ EI.text []
