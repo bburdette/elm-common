@@ -95,7 +95,7 @@ layoutWith layoutOptions mbmax model =
 
 layout : Maybe Util.Size -> Model model msg return -> Html (Msg msg)
 layout mbmax model =
-    layoutWith { options = [] }  mbmax model
+    layoutWith { options = [] } mbmax model
 
 
 overlay : Maybe Util.Size -> Model model msg return -> Element (Msg msg)
