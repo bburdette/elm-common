@@ -17,11 +17,14 @@ type alias Model a =
     { choices : List ( a, String )
     , selected : Maybe a
     , search : String
+    , mobile : Bool
     }
 
 
 type Msg a
     = RowClick a
+    | RowDown a
+    | RowUp a
     | OkClick
     | CancelClick
     | SearchChanged String
@@ -66,19 +69,32 @@ view buttonStyle mbsize model =
                                 else
                                     []
                         in
-                        E.row
-                            ((EE.onClick <| RowClick i)
-                                :: E.height (E.px 30)
-                                :: E.width E.fill
-                                :: style
-                            )
-                            [ E.text s ]
+                        if model.mobile then
+                            E.row
+                                ((EE.onMouseDown <| RowDown i)
+                                    :: (EE.onMouseUp <| RowUp i)
+                                    :: E.height (E.px 30)
+                                    :: E.width E.fill
+                                    :: style
+                                )
+                                [ E.text s ]
+                        else
+                            E.row
+                                ((EE.onClick <| RowClick i)
+                                    :: E.height (E.px 30)
+                                    :: E.width E.fill
+                                    :: style
+                                )
+                                [ E.text s ]
 
                     else
                         E.none
                 )
                 model.choices
-        , E.row [ E.width E.fill, E.spacing 10 ]
+        , if model.mobile then
+            E.none
+        else
+            E.row [ E.width E.fill, E.spacing 10 ]
             [ EI.button buttonStyle
                 { onPress = Just OkClick, label = E.text "Ok" }
             , EI.button
@@ -93,6 +109,14 @@ update msg model =
     case msg of
         RowClick i ->
             GD.Dialog { model | selected = Just i }
+
+        RowDown i ->
+            GD.Dialog { model | selected = Just i }
+
+        RowUp i ->
+            model.selected
+                |> Maybe.map GD.Ok
+                |> Maybe.withDefault GD.Cancel
 
         SearchChanged s ->
             GD.Dialog { model | search = s }
