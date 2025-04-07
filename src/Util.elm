@@ -1,6 +1,7 @@
 module Util exposing (Size,
      Stopoid(..),
      YMDMS,
+     parseDate,
      andMap,
      andNothing,
       compareColor,
@@ -38,14 +39,10 @@ import Array exposing (Array(..))
 import DateTime
 import Dict exposing (Dict)
 import Element as E
-import Element.Border as EBd
-import Element.Background as EBk
-import Element.Font as EF
 import Http
 import Json.Decode exposing (Decoder, map2)
 import ParseHelp exposing (listOf)
 import Parser as P exposing ((|.), (|=), Parser, Problem(..), oneOf, succeed, symbol)
-import Random exposing (Seed, int, step)
 import Time
 import Html.Attributes
 
@@ -462,6 +459,31 @@ parseTime zone string =
                         )
             )
 
+parseDate : Time.Zone -> String -> Result (List P.DeadEnd) (Maybe Time.Posix)
+parseDate zone string =
+    P.run ymdParser string
+        |> Result.map
+            (\x ->
+                DateTime.fromRawParts
+                    { year = x.year
+                    , month = toTimeMonth x.month
+                    , day = x.day
+                    }
+                    { hours = 0
+                    , minutes = 0
+                    , seconds = 0
+                    , milliseconds = 0
+                    }
+                    |> Maybe.map
+                        (DateTime.toPosix
+                            >> (\p ->
+                                    Time.posixToMillis p
+                                        - DateTime.getTimezoneOffset zone p
+                                        |> Time.millisToPosix
+                               )
+                        )
+            )
+
 
 type alias YMDMS =
     { year : Int
@@ -493,6 +515,23 @@ ymdsParser =
         |. symbol ":"
         |= leadingZeroInt
         |. symbol ":"
+        |= leadingZeroInt
+
+
+type alias YMD =
+    { year : Int
+    , month : Int
+    , day : Int
+    }
+
+
+ymdParser : Parser YMD
+ymdParser =
+    succeed YMD
+        |= P.int
+        |. oneOf [ symbol "/", symbol "-" ]
+        |= leadingZeroInt
+        |. oneOf [ symbol "/", symbol "-" ]
         |= leadingZeroInt
 
 
