@@ -29,6 +29,7 @@ module Util exposing (Size,
      sameDay,
      showDateTime,
      showTime,
+     showDate,
      splitAt,
      toTimeMonth,
      trueforany,
@@ -355,6 +356,21 @@ monthInt month =
         Time.Dec ->
             12
 
+
+showDate : Time.Zone -> Time.Posix -> String
+showDate zone time =
+    (String.fromInt <| Time.toYear zone time)
+        ++ "/"
+        ++ (Time.toMonth zone time
+                |> monthInt
+                |> String.fromInt
+                |> String.padLeft 2 '0'
+           )
+        ++ "/"
+        ++ (Time.toDay zone time
+                |> String.fromInt
+                |> String.padLeft 2 '0'
+           )
 
 showDateTime : Time.Zone -> Time.Posix -> String
 showDateTime zone time =
