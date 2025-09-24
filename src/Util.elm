@@ -1,5 +1,6 @@
 module Util exposing (Size,
      Stopoid(..),
+     listWithDefault,
      YMDMS,
      parseDate,
      andMap,
@@ -155,6 +156,12 @@ first f l =
         Nothing ->
             Nothing
 
+
+listWithDefault : List a -> List a -> List a
+listWithDefault default list  =
+    case list of
+        [] -> default
+        x -> x
 
 andNothing : Maybe a -> Maybe a -> Maybe a
 andNothing aprime mba =
