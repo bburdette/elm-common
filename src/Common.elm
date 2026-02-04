@@ -93,15 +93,21 @@ navChoice ccolor currentmode mmsg mode caption =
             [ Font.bold
             , onClick (mmsg mode)
             , Background.color ccolor
-            , paddingEach { edges | right = 3, left = 3, top = 10, bottom = 10 }
+            , paddingEach { edges | right = 5, left = 5, top = 10, bottom = 10 }
             , height fill
+            , Border.roundEach
+                { topLeft = 10
+                , topRight = 10
+                , bottomLeft = 0
+                , bottomRight = 0
+                }
             ]
             [ text txt ]
 
     else
         row
             [ onClick (mmsg mode)
-            , paddingEach { edges | right = 3, left = 3, top = 10, bottom = 10 }
+            , paddingEach { edges | right = 5, left = 5, top = 10, bottom = 10 }
             ]
             [ text txt ]
 
@@ -143,6 +149,12 @@ navbar level currentmode mmsg choices =
     row
         [ Background.color (navbarColor level)
         , width fill
+        , Border.roundEach
+            { topLeft = 10
+            , topRight = 10
+            , bottomLeft = 0
+            , bottomRight = 0
+            }
         ]
         (List.intersperse
             (text " ")
