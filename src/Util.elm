@@ -1,5 +1,6 @@
 module Util exposing (Size,
      Stopoid(..),
+     findFirstIndex,
      listWithDefault,
      YMDMS,
      parseDate,
@@ -223,6 +224,11 @@ find array start incr test =
                         find array (start + incr) incr test
                 )
 
+findFirstIndex : (a -> Bool) -> Array a -> Maybe Int
+findFirstIndex test array =
+    find array 0 1 test
+        |> Maybe.map Tuple.first
+
 
 trueforany : (a -> Bool) -> List a -> Bool
 trueforany f l =
@@ -304,6 +310,7 @@ foldUntil fn initb lst =
 
                 Go updb ->
                     foldUntil fn updb rst
+
 
 
 splitAt : (a -> Bool) -> List a -> ( List a, List a )
